@@ -824,3 +824,37 @@ export const projectsData = [
     }
   }
 ];
+
+// ============================================
+// GITHUB PAGES IMAGE PATH FIX
+// Automatically fixes ALL portfolio images
+// ============================================
+
+function fixImagePaths(data) {
+  if (Array.isArray(data)) {
+    data.forEach((item, index) => {
+      data[index] = fixImagePaths(item);
+    });
+    return data;
+  }
+
+  if (data !== null && typeof data === "object") {
+    Object.keys(data).forEach((key) => {
+      data[key] = fixImagePaths(data[key]);
+    });
+    return data;
+  }
+
+  if (
+    typeof data === "string" &&
+    data.startsWith("/images/")
+  ) {
+    return `${import.meta.env.BASE_URL}${data.slice(1)}`;
+  }
+
+  return data;
+}
+
+// Fix every image in the portfolio
+fixImagePaths(profileData);
+fixImagePaths(projectsData);
